@@ -113,7 +113,8 @@
 	                        
 	                        nameSpan.textContent = item.name;
 	                        nameSpan.classList.add('name');
-	                        messageSpan.textContent = item.message;
+	                        messageSpan.innerHTML = item.message;
+	                        
 	                        messageSpan.classList.add('message');
 	                        
 	                        listItem.appendChild(nameSpan);
