@@ -306,7 +306,37 @@
 	                            <p>Industry: ${industry}</p>
 	                        `;
 	                    }
-
+	                    else if (selectedCategory === 'COMMODITY') {
+	                        const { instrument, expiry_date, open_intrest, high_price,  unit, strike_price, instrument_type, change, option_type, open_price, last_price, prev_close, p_change, low_price } = item;
+	                        mainDetails = `
+	                            <p>Instrument: ${instrument}</p>
+	                            <p>Instrument Type: ${instrument_type}</p>
+	                            <p>Price: ${last_price.toFixed(2)}</p>
+	                            <p>Strike Price: ${strike_price}</p>
+	                            <p>Open Price: ${open_price}</p>
+	                            <p>Prev Price: ${prev_close}</p>
+	                            <p>Low Price : ${low_price}</p>
+	                            <p>High Price : ${high_price}</p>
+	                            <p>Percentage Change : ${p_change.toFixed(2)}%</p>
+		                        <p>Change: ${change.toFixed(2)}</p>
+	                            <p>Option Type: ${option_type}</p>
+	                            <p>Open Interest: ${open_intrest}</p>
+	                            <p>Unit: ${unit}</p>
+	                            <p>Date: ${expiry_date}</p>
+	                        `;
+	                    }
+	                    else if (selectedCategory === 'MUTUALFUNDS') {
+	                        const { date, scheme_name, scheme_category, fund_house, nav, scheme_type} = item;
+	                        mainDetails = `
+	                            <p>Fund House: ${fund_house}</p>
+	                            <p>Scheme Name: ${scheme_name}</p>
+	                            <p>Nav: ${nav.toFixed(2)}</p>
+	                            <p>Scheme Category: ${scheme_category}</p>
+	                            <p>Date : ${date}</p>
+	                            <p>Scheme Type: ${scheme_type}</p>
+	                            
+	                        `;
+	                    }
 	                    card.innerHTML = mainDetails;
 	                    dataSearchResult.appendChild(card);
 	                });
@@ -332,7 +362,7 @@
         <label class="switch"> 
 		<input type="checkbox" id="toggleCheckbox">
 		<span class="slider round"></span>
-		</label> Toggle to combine Future&option , Commodity and Mutual funds also.
+		</label> Toggle for combine future and options search
 			
         <div id="dataSearchResults" class="card-container"></div>
 
