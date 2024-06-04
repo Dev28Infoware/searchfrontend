@@ -167,7 +167,33 @@
    </style>
 </head>
 <body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/protobufjs/6.11.2/protobuf.min.js"></script>
+
  <script>
+ const Response = {
+	      name: 'string',
+	      category: 'string',
+	      message: 'string'
+	    };
+
+	    const ResponseArray = {
+	      responses: [{
+	        name: 'string',
+	        category: 'string',
+	        message: 'string'
+	      }]
+	    };
+
+
+		// Example function to serialize ResponseArray to JSON
+		const serializeResponseArray = (responseArray) => {
+		  return JSON.stringify(responseArray);
+		};
+
+		// Example function to deserialize JSON to ResponseArray
+		const deserializeResponseArray = (data) => {
+		  return JSON.parse(data);
+		};
  document.addEventListener('DOMContentLoaded', function() {
 	    //const domainURL = 'http://localhost:8185/search/s/';
 	    const domainURL = 'https://generictradingapicompany.infoware.xyz/search/s/';
@@ -189,10 +215,15 @@
 	        const query = searchInput.value.trim();
 	        
 	        fetch(domainURL + `search/autosuggest?limit=10&offset=0&text=${query}&userId=${id}&isOptions=${options}&characterSearch=${characterSearch}`)
-	            .then(response => response.json())
-	            .then(data => {
+	            .then(data => data.json())
+	            .then(response => {
+	            	const responses = response.responses;
+	            	//const view = new DataView(responses);
+	                let offset = 0;
+	                // Parse each response in the binary data
 	                searchResults.innerHTML = '';
-	                data.forEach(item => {
+	                responses.forEach(item => {
+	                	
 	                    //data[category].forEach(item => {
 	                        const listItem = document.createElement('li');
 	                        const nameSpan = document.createElement('span');
@@ -260,11 +291,11 @@
 	        options = this.checked;
 	        //console.log('Options is toggled to ',options);
 	    });
-	    characterSearchToggle.addEventListener('change', function() {
+	   //characterSearchToggle.addEventListener('change', function() {
 	        // If the checkbox is checked, return true; otherwise, return false
-	        characterSearch = this.checked;
+	    //    characterSearch = this.checked;
 	        //console.log('Options is toggled to ',options);
-	    });
+	   // });
 	    function formatDate(inputDateString) {
 	        // Split the input date string by space
 	        let parts = inputDateString.split(' ');
