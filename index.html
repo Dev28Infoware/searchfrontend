@@ -395,6 +395,21 @@
 	                            
 	                        `;
 	                    }
+	                    else if(selectedCategory === 'INDICES'){
+	                    	const { high, last, sector_key, low, per_change365d, name, per_change30d, percent_change, open} = item;
+	                        mainDetails = `
+	                            <p>Name: ${name}</p>
+	                            <p>Price: ${last}</p>
+	                            <p>Open: ${open.toFixed(2)}</p>
+	                            <p>High Category: ${high.toFixed(2)}</p>
+	                            <p>Low : ${low.toFixed(2)}</p>
+	                            <p>Percent Change: ${percent_change.toFixed(2)}</p>
+	                            <p>Sector: ${sector_key}</p>
+	                            <p>Percent Change 365 day: ${per_change365d.toFixed(2)}</p>
+	                            <p>Percent Change 30 day: ${per_change30d.toFixed(2)}</p>
+	                            
+	                        `;
+	                    }
 	                    card.innerHTML = mainDetails;
 	                    dataSearchResult.appendChild(card);
 	                });
