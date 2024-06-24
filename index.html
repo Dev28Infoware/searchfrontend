@@ -211,6 +211,11 @@
 	    
 	    let id = 993;
 	    let selectedCategory = '';
+	    let debounceTimeout;
+		function debounce(func, delay) {
+		    clearTimeout(debounceTimeout);
+		    debounceTimeout = setTimeout(func, delay);
+		 }
 	    	function fetchAutosuggestions() {
 	        const query = searchInput.value.trim();
 	        
@@ -279,8 +284,18 @@
 	                console.error('Error fetching search results:', error);
 	            });
 	    }
-	    searchInput.addEventListener('input', fetchAutosuggestions);
-	    searchInput.addEventListener('click', fetchAutosuggestions);
+	    //searchInput.addEventListener('input', fetchAutosuggestions);
+	    //searchInput.addEventListener('click', fetchAutosuggestions);
+	   	searchInput.addEventListener('input', function(){
+	    	debounce(function(){
+	    		fetchAutosuggestions();
+	    	},600);
+	    });
+	    searchInput.addEventListener('click', function(){
+	    	debounce(function(){
+	    		fetchAutosuggestions();
+	    	},600);
+	    });
 	    document.addEventListener('click', function(event) {
 	        if (!searchInput.contains(event.target)) {
 	            searchResults.innerHTML = '';
