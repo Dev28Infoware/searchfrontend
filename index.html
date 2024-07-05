@@ -170,6 +170,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/protobufjs/6.11.2/protobuf.min.js"></script>
 
  <script>
+ const password = btoa('password123');
+ //const domainURL = 'http://localhost:8185/search/s/';
+ const domainURL = 'https://generictradingapicompany.infoware.xyz/search/s/';
+	async function authenticatePassword() {
+	    while (true) {
+	        let passwordAttempt = btoa(prompt('Enter the password:'));
+			let response = await fetch(domainURL + `password/auth?value=${passwordAttempt}`);
+            let isAuthenticated = await response.text();
+            
+            if (isAuthenticated === 'true') {
+                alert('Password Correct !');
+                break;
+            } else {
+                alert('Incorrect Password. Please try again !');
+            }
+	    }
+	}
+ authenticatePassword();
  const Response = {
 	      name: 'string',
 	      category: 'string',
@@ -195,8 +213,6 @@
 		  return JSON.parse(data);
 		};
  document.addEventListener('DOMContentLoaded', function() {
-	    //const domainURL = 'http://localhost:8185/search/s/';
-	    const domainURL = 'https://generictradingapicompany.infoware.xyz/search/s/';
 	    const searchInput = document.getElementById('searchInput');
 	    const searchResults = document.getElementById('searchResults');
 	    const searchButton = document.getElementById('searchButton');
