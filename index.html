@@ -18,7 +18,16 @@
         height: 100%;
         width: 100%;
     }
-    
+    .newsContainer{
+    	display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        width: 100%;
+        margin-top : 2%;
+        border-top : 0.5px solid grey
+    }
     .logo {
         height: 10%;
         width: 10%;
@@ -171,12 +180,12 @@
 
  <script>
  const password = btoa('password123');
- //const domainURL = 'http://localhost:8185/search/s/';
- const domainURL = 'https://generictradingapicompany.infoware.xyz/search/s/';
+ const domainURL = 'http://localhost:8185/search/';
+ //const domainURL = 'https://generictradingapicompany.infoware.xyz/search/s/';
 	async function authenticatePassword() {
 	    while (true) {
 	        let passwordAttempt = btoa(prompt('Enter the password:'));
-			let response = await fetch(domainURL + `password/auth?value=${passwordAttempt}`);
+			let response = await fetch(domainURL + `s/password/auth?value=${passwordAttempt}`);
             let isAuthenticated = await response.text();
             
             if (isAuthenticated === 'true') {
@@ -187,7 +196,17 @@
             }
 	    }
 	}
- //authenticatePassword();
+	
+	async function news() {
+			let response = await fetch(domainURL + `news/get_news?limit=30&offset=0&exchangeType=news`);
+            let newsData = await response.json();
+            newsData.forEach(item=>{
+            	
+            });
+			console.log(newsData.data)
+	}
+	news();
+//authenticatePassword();
  const Response = {
 	      name: 'string',
 	      category: 'string',
@@ -219,13 +238,14 @@
 	    const dataSearchResult = document.getElementById('dataSearchResults');
 	    const optionsToggle = document.getElementById('toggleCheckbox');
 	    const characterSearchToggle = document.getElementById('toggleCharacter');
+	    const newFeedContainer = document.getElementById('newsFeed');
 	    let options = false;
 	    let characterSearch = true;
 	    
 	    //console.log('options is ',options);
 	   // console.log('toggle is ',optionsToggle.checked);
 	    
-	    let id = 993;
+	    let id = 9325;
 	    let selectedCategory = '';
 	    let debounceTimeout;
 		function debounce(func, delay) {
@@ -235,7 +255,7 @@
 	    	function fetchAutosuggestions() {
 	        const query = searchInput.value.trim();
 	        
-	        fetch(domainURL + `search/autosuggest?limit=10&offset=0&text=${query}&userId=${id}&isOptions=${options}&characterSearch=${characterSearch}`)
+	        fetch(domainURL + `s/search/autosuggest?limit=10&offset=0&text=${query}&userId=${id}&isOptions=${options}&characterSearch=${characterSearch}`)
 	            .then(data => data.json())
 	            .then(response => {
 	            	const responses = response.responses;
@@ -273,7 +293,7 @@
 	                        			  keyword : query
 	                        			};
 
-	                        			fetch(domainURL+`save`, {
+	                        			fetch(domainURL+`s/save`, {
 	                        			  method: 'POST',
 	                        			  headers: {
 	                        			    'Content-Type': 'application/json'
@@ -351,7 +371,7 @@
 	        }
 	        //console.log('category',selectedCategory);
             
-	        fetch(domainURL + `get_search?category=${selectedCategory}&limit=10&offset=0&text=${query}&userId=993`)
+	        fetch(domainURL + `s/get_search?category=${selectedCategory}&limit=10&offset=0&text=${query}&userId=${id}`)
 	            .then(response => response.json())
 	            .then(data => {
 	            	dataSearchResult.innerHTML = ''; // Clear previous search results
@@ -361,24 +381,26 @@
 
 	                    let mainDetails = '';
 	                    if (selectedCategory === 'FUTUREOPTIONS') {
-	                        const { open_instrument,tckr_symbol,close_price,average_price, high_price,low_price,	percentage_change_in_open_instrument, trading_value, settlement_price, trading_volumne, option_type, expiry_date, strike_price } = item;
-	                        mainDetails = `
-	                        	<p>Symbol : ${tckr_symbol}</p>
-	                            <p>Percentage Change : ${percentage_change_in_open_instrument.toFixed(2)}%</p>
-	                            <p>Expiry Date: ${formatDate(expiry_date)}</p>
-	                            <p>Strike Price: ${strike_price}</p>
-	                            <p>Option Type: ${option_type}</p>
-	                            <p>Close Price: ${close_price.toFixed(2)}</p>
-	                            <p>Average Price: ${average_price}</p>
-	                            <p>High Price: ${high_price.toFixed(2)}</p>
-	                            <p>Low Price: ${low_price.toFixed(2)}</p>
-	                            <p>Trading Value: ${trading_value.toFixed(2)}</p>
-	                            <p>Settlement Price: ${settlement_price.toFixed(2)}</p>
-	                            <p>Trading Volume: ${trading_volumne.toFixed(2)}</p>
+	                        const { openinstrument,tckrsymbol,closeprice,averageprice, highprice,lowprice,	percentagechangeinopeninstrument, tradingvalue, settlementprice, tradingvolumne, optiontype, expirydate, strikeprice } = item;
+							 mainDetails = `
+	                        	<p>Symbol : ${tckrsymbol}</p>
+	                            <p>Percentage Change : ${percentagechangeinopeninstrument.toFixed(2)}%</p>
+	                            <p>Expiry Date: ${formatDate(expirydate)}</p>
+	                            <p>Strike Price: ${strikeprice}</p>
+	                            <p>Option Type: ${optiontype}</p>
+	                            <p>Close Price: ${closeprice.toFixed(2)}</p>
+	                            <p>Average Price: ${averageprice}</p>
+	                            <p>High Price: ${highprice.toFixed(2)}</p>
+	                            <p>Low Price: ${lowprice.toFixed(2)}</p>
+	                            <p>Trading Value: ${tradingvalue.toFixed(2)}</p>
+	                            <p>Settlement Price: ${settlementprice.toFixed(2)}</p>
+	                            <p>Trading Volume: ${tradingvolumne.toFixed(2)}</p>
 	                            
 	                        `;
 	                    } else if (selectedCategory === 'EQUITY') {
 	                        const { symbol, vwap, industry, total_traded_volume, exchange_type, market_cap, close, change, company_name, open,last_price,base_price,pchange } = item;
+							console.log(item);
+	                       
 	                        mainDetails = `
 	                            <p>Symbol: ${symbol}</p>
 	                            <p>Exchange Type: ${exchange_type}</p>
@@ -397,6 +419,8 @@
 	                    }
 	                    else if (selectedCategory === 'COMMODITY') {
 	                        const { instrument, expiry_date, open_intrest, high_price,  unit, strike_price, instrument_type, change, option_type, open_price, last_price, prev_close, p_change, low_price } = item;
+							console.log(item);
+	                       
 	                        mainDetails = `
 	                            <p>Instrument: ${instrument}</p>
 	                            <p>Instrument Type: ${instrument_type}</p>
@@ -416,6 +440,8 @@
 	                    }
 	                    else if (selectedCategory === 'MUTUALFUNDS') {
 	                        const { date, scheme_name, scheme_category, fund_house, nav, scheme_type} = item;
+							console.log(item);
+	                       
 	                        mainDetails = `
 	                            <p>Fund House: ${fund_house}</p>
 	                            <p>Scheme Name: ${scheme_name}</p>
@@ -427,17 +453,19 @@
 	                        `;
 	                    }
 	                    else if(selectedCategory === 'INDICES'){
-	                    	const { high, last, sector_key, low, per_change365d, name, per_change30d, percent_change, open} = item;
+	                    	const { high, last, sectorkey, low, perchange365d, name, perchange30d, percentchange, open} = item;
+							console.log(item);
+	                       
 	                        mainDetails = `
 	                            <p>Name: ${name}</p>
 	                            <p>Price: ${last}</p>
 	                            <p>Open: ${open.toFixed(2)}</p>
 	                            <p>High Category: ${high.toFixed(2)}</p>
 	                            <p>Low : ${low.toFixed(2)}</p>
-	                            <p>Percent Change: ${percent_change.toFixed(2)}</p>
-	                            <p>Sector: ${sector_key}</p>
-	                            <p>Percent Change 365 day: ${per_change365d.toFixed(2)}</p>
-	                            <p>Percent Change 30 day: ${per_change30d.toFixed(2)}</p>
+	                            <p>Percent Change: ${percentchange.toFixed(2)}</p>
+	                            <p>Sector: ${sectorkey}</p>
+	                            <p>Percent Change 365 day: ${perchange365d.toFixed(2)}</p>
+	                            <p>Percent Change 30 day: ${perchange30d.toFixed(2)}</p>
 	                            
 	                        `;
 	                    }
@@ -468,6 +496,7 @@
     <br/>
    
     <div id="dataSearchResults" class="card-container"></div>
+    
 </div>
     
     
